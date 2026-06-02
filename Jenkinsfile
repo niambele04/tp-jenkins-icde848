@@ -1,22 +1,16 @@
 /**
  * Jenkinsfile – Pipeline CI complète
- * Projet : Boutique en ligne – ICDE848
- *
- * Ce fichier doit être placé à la RACINE du dépôt Git.
- * Jenkins le détecte automatiquement lors de la création du job Pipeline.
+ * Projet : Boutique en ligne – ICDE848 / TESE860
  *
  * Stages :
- *   1. Checkout       → récupère le code depuis Git
- *   2. Build          → compile le code source
- *   3. Tests unitaires → lance *Test.java via Surefire
+ *   1. Checkout          → récupère le code depuis Git
+ *   2. Build             → compile le code source
+ *   3. Tests unitaires   → lance *Test.java via Surefire
  *   4. Tests intégration → lance *IT.java via Failsafe
- *   5. Couverture     → génère le rapport JaCoCo
- *   6. Qualité        → Checkstyle + PMD + CPD + SpotBugs
- *   7. Archive        → sauvegarde le JAR dans Jenkins
- *
- * Post :
- *   - failure → email à l'équipe
- *   - fixed   → email quand le build repasse au vert
+ *   5. Couverture        → génère le rapport JaCoCo
+ *   6. Qualité           → Checkstyle + PMD + CPD + SpotBugs
+ *   7. Tests UI Selenium → lance pytest sur the-internet.herokuapp.com
+ *   8. Archive           → sauvegarde le JAR dans Jenkins
  */
 
 pipeline {
@@ -139,6 +133,35 @@ pipeline {
             }
         }
 
+        stage('Tests UI Selenium') {
+            steps {
+                dir('tp-selenium') {
+                    sh '''
+                        python3 -m venv venv
+                        . venv/bin/activate
+                        pip install -r requirements.txt --quiet
+                        pytest tests/ \
+                            -v \
+                            --junitxml=rapport-selenium.xml \
+                            --html=rapport-selenium.html \
+                            --self-contained-html
+                    '''
+                }
+            }
+            post {
+                always {
+                    junit 'tp-selenium/rapport-selenium.xml'
+                    archiveArtifacts(
+                        artifacts: 'tp-selenium/rapport-selenium.html',
+                        allowEmptyArchive: true
+                    )
+                }
+                failure {
+                    echo 'Tests UI en échec — consulter rapport-selenium.html'
+                }
+            }
+        }
+
         stage('Archive') {
             steps {
                 archiveArtifacts(
@@ -149,29 +172,6 @@ pipeline {
                 echo "Artefact archivé avec succès"
             }
         }
-
-        /*
-        stage('Validation PROD') {
-            when { expression { return params.ENVIRONMENT == 'prod' } }
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    input(
-                        message:   "Déployer en PRODUCTION ?",
-                        ok:        "Oui, déployer",
-                        submitter: "admin,tech-lead"
-                    )
-                }
-            }
-        }
-        */
-
-        /*
-        stage('Deploy') {
-            steps {
-                sh "./deploy.sh ${params.ENVIRONMENT}"
-            }
-        }
-        */
 
     }
 
