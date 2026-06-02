@@ -1,0 +1,4 @@
+fr\epsi\model\Article.class
+fr\epsi\repository\StockRepository.class
+fr\epsi\model\Panier.class
+fr\epsi\service\CommandeService.class

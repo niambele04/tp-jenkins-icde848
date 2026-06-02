@@ -130,33 +130,4 @@ class CommandeServiceTest {
     void categoriser_CinqCentsEuros_RetourneGrande() {
         assertEquals("GRANDE", service.categoriserCommande(500.0));
     }
-    @Test
-@DisplayName("TVA 20% sur 100€ = 20€")
-void calculerTVA_CentEuros_RetourneVingt() {
-    double tva = service.calculerTVA(100.0);
-    assertEquals(20.0, tva, 0.01);
-}
-
-@Test
-@DisplayName("TVA sur 33.33€ arrondie à 2 décimales")
-void calculerTVA_MontantDecimal_RetourneArrondi() {
-    double tva = service.calculerTVA(33.33);
-    assertEquals(6.67, tva, 0.01);
-}
-
-@Test
-@DisplayName("TVA sur 0€ = 0€")
-void calculerTVA_Zero_RetourneZero() {
-    double tva = service.calculerTVA(0.0);
-    assertEquals(0.0, tva, 0.01);
-}
-
-@Test
-@DisplayName("Montant négatif lève une IllegalArgumentException")
-void calculerTVA_MontantNegatif_LeveException() {
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> service.calculerTVA(-10.0)
-    );
-}
 }

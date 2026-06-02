@@ -79,4 +79,18 @@ class CommandeServiceIT {
         assertEquals(0.0,    apresRemise, 0.001);
         assertEquals("PETITE", categorie);
     }
+    /**
+ * Calcule la TVA à 20% sur un montant donné.
+ *
+ * @param montant le montant HT
+ * @return la TVA arrondie à 2 décimales
+ * @throws IllegalArgumentException si le montant est négatif
+ */
+public double calculerTVA(double montant) {
+    if (montant < 0) {
+        throw new IllegalArgumentException("Montant négatif : " + montant);
+    }
+    double tva = montant * 0.20;
+    return Math.round(tva * 100.0) / 100.0;
+}
 }

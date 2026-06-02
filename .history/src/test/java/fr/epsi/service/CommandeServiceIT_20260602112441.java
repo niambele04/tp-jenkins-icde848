@@ -1,11 +1,10 @@
 package fr.epsi.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import fr.epsi.model.Article;
 import fr.epsi.model.Panier;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests d'INTÉGRATION du CommandeService.
