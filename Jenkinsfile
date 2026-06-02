@@ -141,7 +141,7 @@ pipeline {
                     recordIssues(
                         enabledForFailure: true,
                         tools: [
-                            checkStyle(pattern: '**/checkstyle-result.xml'),
+                            checkstyle(pattern: '**/checkstyle-result.xml'),
                             pmdParser(pattern:  '**/pmd.xml'),
                             cpd(pattern:        '**/cpd.xml'),
                             spotBugs(pattern:   '**/spotbugsXml.xml')
